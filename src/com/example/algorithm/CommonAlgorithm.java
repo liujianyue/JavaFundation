@@ -13,9 +13,6 @@ import java.util.Map;
 import java.util.PriorityQueue;
 import java.util.Stack;
 
-import javax.naming.LinkLoopException;
-import javax.print.attribute.standard.PDLOverrideSupported;
-
 public class CommonAlgorithm {
 	private static final String TAG = "JianzhiOfferAlgorithm";
 	/**
@@ -2417,18 +2414,49 @@ public class CommonAlgorithm {
 	   * 如何得到一个数据流中的中位数？如果从数据流中读出奇数个数值，
 	   * 那么中位数就是所有数值排序之后位于中间的数值。
 	   * 如果从数据流中读出偶数个数值，那么中位数就是所有数值排序之后中间两个数的平均值。
+	   * 
+	   * 思想:使用两个PriorityQueue,PriorityQueue的内部内部使用对排序,相当于如下情形
+	   * |\     	 /|
+	   * | \   		/ |
+	   * |小	)中位数 (  |大
+	   * | /        \ |
+	   * |/          \|
 	   * @param num
 	   */
-	public void Insert(Integer num) {
-		PriorityQueue<Integer> minHeap = new PriorityQueue<>();
-		//minHeap.
+	  PriorityQueue<Integer> minHeap = new PriorityQueue<>();
+	  PriorityQueue<Integer> maxHeap = new PriorityQueue<>(15, new Comparator<Integer>() {
+
+		@Override
+		public int compare(Integer o1, Integer o2) {
+			// TODO Auto-generated method stub
+			return 	o2 - o1;
+		}
+	});
+	  int heapCount = 0;
+	  public void Insert(Integer num)  {
+		if((heapCount & 1) == 1){//当前数据个数是奇数个
+			//将大頂堆的顶尖元素取出
+			maxHeap.offer(num);
+			Integer temp = maxHeap.poll();
+			//放到小顶堆中,保证两个頂堆个数相同
+			minHeap.offer(temp);
+		}else{//当前数据个数是偶数个
+			//将小頂堆的顶尖元素取出
+			minHeap.offer(num);
+			Integer temp = minHeap.poll();
+			//放到大頂堆中,保证大頂堆的个数比小頂堆多1
+			maxHeap.offer(temp);
+		}
+		heapCount ++;
     }
 
-    public Double GetMedian() {
-		return null;
-        
+	  public Double GetMedian() {
+    	if((heapCount & 1) == 0){//当前数据个数是偶数个
+			return new Double((minHeap.peek() + maxHeap.peek())) / 2;
+		}else{
+			return new Double(maxHeap.peek());
+		}
     }
-	  
 	  
 	  
 	  
@@ -2471,7 +2499,116 @@ public class CommonAlgorithm {
     }
     
     
-  
+    
+    
+    /**
+     * 请设计一个函数，用来判断在一个矩阵中是否存在一条包含某字符串所有字符的路径。
+     * 路径可以从矩阵中的任意一个格子开始，每一步可以在矩阵中向左，
+     * 向右，向上，向下移动一个格子。如果一条路径经过了矩阵中的某一个格子，
+     * 则该路径不能再进入该格子。 例如 a b c e s f c s a d e e 矩阵中包含一条字符串"bcced"的路径
+     * ，但是矩阵中不包含"abcb"路径，因为字符串的第一个字符b占据了矩阵中的第一行第二个格子之后，
+     * 路径不能再次进入该格子。
+     * 
+     * 
+     * 类似与找迷宫出口的问题
+     * 思想:
+     * 从目标字串的首字串开始找,找到后,分别在他的四周(上下左右)找下一个节字符,重复该过程,
+     * 否则回溯到上一个字符的另一个方向.同时需要另开辟一个flag数组,保存当前的字符是否被经过过
+     * 典型的回溯法应用,可使用递归法
+     * @param matrix 源矩阵
+     * @param rows 矩阵行数
+     * @param cols 矩阵列数
+     * @param i 正遍历矩阵的第(i,j)个点
+     * @param j
+     * @param 遍历目标串的第k个节点
+     * @param str 目标串
+     * @return
+     */
+    public boolean hasPath(char[] matrix, int rows, int cols, char[] str)
+    {
+    	if(matrix == null || matrix.length == 0 || 
+    		(rows == 0 && cols == 0) || 
+    		str == null || str.length == 0) 
+    		return false;
+    	int [] flag = new int[matrix.length];
+    	for(int i = 0;i < rows;++i){
+    		for(int j = 0;j < cols; ++j){
+    			if(hasPath(matrix, rows, cols, i, j, 0, str ,flag))
+    				return true;
+    		}
+    	}
+		return false;
+    }
+
+    private boolean hasPath(char[] matrix, int rows, int cols, int i , int j, int k, char[] str,int [] flag)
+    {	
+    	//正在遍历矩阵的第index节点,同时标注flag,1表示经过过
+    	int index = cols * i + j;
+    	//i 和 j 不能越界,这个点不能经过过,且这个点的字符是想要的字符,符合这些条件可继续向当前的四周遍历
+    	if(i < 0 || i >= rows || j < 0 || j >= cols || matrix[index] != str[k] || flag[index] == 1){
+    		return false;
+    	}
+    	//目标串的最后一个串找到了,返回
+    	if(k == str.length - 1) return true;
+    	flag[index] = 1;//经过过
+    	if(hasPath(matrix, rows, cols, i - 1, j, k + 1, str, flag)//上
+    		|| hasPath(matrix, rows, cols, i + 1, j, k + 1, str, flag)//下
+    		|| hasPath(matrix, rows, cols, i, j - 1, k + 1, str, flag)//左
+    		|| hasPath(matrix, rows, cols, i, j + 1, k + 1, str, flag))//右
+    		return true;
+    	//需要回溯到上一个节点,且表示没有经过过
+    	flag[index] = 0;
+		return false;
+    }
+    
+    
+    /**
+     * 地上有一个m行和n列的方格。一个机器人从坐标0,0的格子开始移动，
+     * 每一次只能向左，右，上，下四个方向移动一格，
+     * 但是不能进入行坐标和列坐标的数位之和大于k的格子。 
+     * 例如，当k为18时，机器人能够进入方格（35,37），因为3+5+3+7 = 18。
+     * 但是，它不能进入方格（35,38），因为3+5+3+8 = 19。请问该机器人能够达到多少个格子？
+     * @param threshold
+     * @param rows
+     * @param cols
+     * @return
+     */
+    public int movingCount(int threshold, int rows, int cols)
+    {
+    	if(rows == 0 && cols == 0)
+    		return 0;
+    	if(threshold < 0) return 0;
+    	if(threshold == 0) return rows * cols - 1;
+    	int[][] flag = new int[rows][ cols];
+		return movingCount(threshold, rows, cols, 0, 0,flag);
+        
+    }
+    public int movingCount(int threshold, int rows, int cols,int i,int j,int[][] flag)
+    {
+    	if(i < 0 || i >= rows || j < 0 || j >= cols || flag[i][j] >= 1)
+    		return 0;
+    	
+    	//记录该点的阈值,下次不必重复计算
+    	if((caculateSum(i) + caculateSum(j)) > threshold)
+    	{
+    		flag[i][j] = 2;
+    		return 0;
+    	}
+    	flag[i][j] = 1;//经过了
+    	return movingCount(threshold, rows, cols, i - 1, j, flag) + 
+    			movingCount(threshold, rows, cols, i + 1, j, flag) + 
+    			movingCount(threshold, rows, cols, i, j - 1, flag) + 
+    			movingCount(threshold, rows, cols, i, j + 1, flag) + 1;
+    }
+    
+    private int caculateSum(int a){
+    	int sum = 0;
+    	do{
+    		sum += a%10;
+    	}while((a = a/10) != 0);
+		return sum;
+    }
+    
     
     
 	public static void main(String[] args) {
@@ -2484,8 +2621,12 @@ public class CommonAlgorithm {
 		System.out.println(start);
 		System.out.println((end - start)>>1 + start);
 		int[] testInt = {1,3,2,6,4};
-		System.out.println("0xf0000000::" + 0x7fffffff);*/
-		new CommonAlgorithm().StrToInt("123");
+		System.out.println("0xf0000000::" + 0x7fffffff);
+		new CommonAlgorithm().StrToInt("123");*/
+		Integer a = new Integer(5);
+		Integer b = new Integer(5);
+		System.out.println(a.equals(b));
+		System.out.println(a == b);
 	}
 	
 	private void println(String tag,String msg){
