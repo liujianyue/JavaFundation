@@ -9,9 +9,13 @@ import java.util.EmptyStackException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.PriorityQueue;
+import java.util.Queue;
 import java.util.Stack;
+import java.util.Vector;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class CommonAlgorithm {
 	private static final String TAG = "JianzhiOfferAlgorithm";
@@ -2425,7 +2429,6 @@ public class CommonAlgorithm {
 	   */
 	  PriorityQueue<Integer> minHeap = new PriorityQueue<>();
 	  PriorityQueue<Integer> maxHeap = new PriorityQueue<>(15, new Comparator<Integer>() {
-
 		@Override
 		public int compare(Integer o1, Integer o2) {
 			// TODO Auto-generated method stub
@@ -2609,28 +2612,5 @@ public class CommonAlgorithm {
 		return sum;
     }
     
-    
-    
-	public static void main(String[] args) {
-		/*int[] a = {6501,6828,6963,7036,7422,7674,8146,8468,8704,8717,
-		 * 9170,9359,9719,9895,9896,9913,9962,154,293,334,492,1323,1479,1539,
-		 * 1727,1870,1943,2383,2392,2996,3282,3812,3903,4465,4605,4665,4772,4828,
-		 * 5142,5437,5448,5668,5706,5725,6300,6335};
-		new JianzhiOfferAlgorithm().minNumberInRotateArray(a);
-		int start = 5,end = 7;
-		System.out.println(start);
-		System.out.println((end - start)>>1 + start);
-		int[] testInt = {1,3,2,6,4};
-		System.out.println("0xf0000000::" + 0x7fffffff);
-		new CommonAlgorithm().StrToInt("123");*/
-		Integer a = new Integer(5);
-		Integer b = new Integer(5);
-		System.out.println(a.equals(b));
-		System.out.println(a == b);
-	}
-	
-	private void println(String tag,String msg){
-		System.out.println("---" + tag + "---" + msg);
-	}
 }
  
