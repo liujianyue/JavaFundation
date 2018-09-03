@@ -1,12 +1,18 @@
 package com.example.AllTest;
 
+import java.sql.CallableStatement;
+import java.sql.PreparedStatement;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import com.example.algorithm.CommonAlgorithm;
 
 public class Test {
 
-	private static void main(String[] args) {
+	public static void main(String[] args) {
 		/*int[] a = {6501,6828,6963,7036,7422,7674,8146,8468,8704,8717,
 		 * 9170,9359,9719,9895,9896,9913,9962,154,293,334,492,1323,1479,1539,
 		 * 1727,1870,1943,2383,2392,2996,3282,3812,3903,4465,4605,4665,4772,4828,
@@ -55,18 +61,7 @@ public class Test {
 		Boolean B = false;
 		System.out.println(bb == B);
 		
-		int i1 = 5;
-		Integer i2 = new Integer(5);
-		System.out.println(i1 == i2);
-		int a=257;
-		Integer b=257;
-		Integer c=257;
-		Integer b2=57;
-		Integer c2=57;
-		System.out.println(b==a);
-		System.out.println(b.equals(257.0));
-		System.out.println(b==c);
-		System.out.println(b2==c2);
+		
 		List<?> s;
 		class A {}
 		class B extends A {}
@@ -87,7 +82,7 @@ public class Test {
         a = downA;  //E错，范围不能赋值给点
         a = o;      //F错，List<Object>只是一个点
         downA = downB;  //G对，小于等于A的范围包含小于等于B的范围，因为B本来就比A小，B时A的子类嘛
-		*/
+		
 		System.out.println(test());
 		HashMap map = new HashMap(); 
 		map.put("name",null);      
@@ -99,7 +94,83 @@ public class Test {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		System.out.println(AccountType.FIXED);
+		int arr[] = new int[5];
+
+		System.out.println(arr[3]); 
 		
+		 String str1="hello";
+		 
+		 String str3 = "hello";
+
+		 String str2="he"+ new String("llo");
+
+		 System.out.println(str1==str2); 
+		 System.out.println(str1==str3); 
+		
+		int i1 = 5;
+		Integer i2 = new Integer(5);
+		System.out.println(i1 == i2);
+		int a=257;
+		Integer b=257;
+		Integer c=257;
+		Integer b2=57;
+		Integer c2=57;
+		System.out.println(b==a);
+		System.out.println(b.equals(257.0));
+		System.out.println(b==c);
+		System.out.println(b2==c2);
+		System.out.println(~i1);
+		
+		int a = 10;
+		int b = 0;
+		b = a++;
+		System.out.println(a);
+		List  Listlist1 = new ArrayList();
+	    Listlist1.add(0);
+	    List Listlist2 = Listlist1;
+	    System.out.println(Listlist1.get(0) instanceof Integer);
+	    System.out.println(Listlist2.get(0) instanceof Integer);
+		System.out.println("--dddsssssd-" +  ((0 >>> 1) | (2 & 1)));
+		Object[] os = new Object[8];
+		Arrays.copyOf(os, 7);
+		String s1 = "Programming";
+        String s2 = new String("Programming");
+        String s3 = "Program" + "ming";
+        System.out.println(s1 == s2);
+        System.out.println(s1 == s3);
+        System.out.println(s2 == s2.intern());
+        final Map<String, String> connectedLegacyVpns;
+        List<String> vpnProfiles;
+        int a = 100/0;
+		System.out.println(getSumN(10));*/
+		
+	        try {
+	            try {
+	                throw new Sneeze();
+	            }
+	            catch ( Annoyance a ) {
+	                System.out.println("Caught Annoyance");
+	                throw a;
+	            }
+	        }
+	        catch ( Sneeze s ) {
+	            System.out.println("Caught Sneeze");
+	            return ;
+	        }
+	        finally {
+	            System.out.println("Hello World!");
+	        }
+	}
+	
+	private static int getSumN(int N){
+		try{
+			int c = 1/N;
+			return N + getSumN(N - 1);
+		}catch(Exception e){
+			System.out.println(N);
+			return 0;
+		}
 	}
 	
 	private void testFinal(){
@@ -151,6 +222,21 @@ public class Test {
 		public void main(String [] args);
 	}
 	
-	private void test3(int a,long b){}
+	private void test3(int a,long b){
+		Thread.currentThread().suspend();
+//		Statement 
+		PreparedStatement p;
+	}
 	private void test3(long b,int a){}
+	
+	enum AccountType
+	{
+	    SAVING, FIXED, CURRENT;
+	    private AccountType()
+	    {
+	        System.out.println("It is a account type");
+	    }
+	}
 }
+class Annoyance extends Exception {}
+class Sneeze extends Annoyance {}

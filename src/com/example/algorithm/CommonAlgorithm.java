@@ -987,7 +987,13 @@ public class CommonAlgorithm {
 	
 	
 
-	
+	/**
+	 * 快排
+	 * @param sort
+	 * @param start
+	 * @param end
+	 * @return
+	 */
 	public int Partition(int[] sort,int start ,int end){
 		if(start == end) return start;
 		int small = start - 1;
